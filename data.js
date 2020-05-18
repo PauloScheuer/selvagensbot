@@ -1,4 +1,3 @@
-var shuffle = require('shuffle-array');
 var fs = require('fs');
 var selvagens = JSON.parse(fs.readFileSync('./selvagens.json', 'utf-8'));
 
@@ -43,7 +42,8 @@ function getPhrases() {
     }
     i++;
   }
+
+  //escreve
+  fs.writeFileSync('./posts.json', JSON.stringify(posts));
 }
-getPhrases();
-//escreve
-fs.writeFileSync('./posts.json', JSON.stringify(posts));
+module.exports = getPhrases();

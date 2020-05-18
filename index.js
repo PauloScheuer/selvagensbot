@@ -4,7 +4,6 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 var schedule = require('node-schedule');
-var posts = JSON.parse(fs.readFileSync('posts.json', 'utf-8'));
 
 //adiciona ao array.prototype uma função que retorna um número aleátorio
 Array.prototype.randomElement = function () {
@@ -26,11 +25,13 @@ app.listen(porta);
 //função do bot
 var j = schedule.scheduleJob({ hour: 15, minute: 0 },
   function botInit() {
-    var postNow = posts['toCome'].randomElement();
-    var indexNow = posts['toCome'].indexOf(postNow);
-    posts['toCome'].splice(indexNow, 1);
-    posts['already'].push(postNow);
+    require('./data');
+    var posts = JSON.parse(fs.readFileSync('posts.json', 'utf-8'));
     if (posts['toCome'].length > 0) {//se ainda tiver posts
+      var postNow = posts['toCome'].randomElement();
+      var indexNow = posts['toCome'].indexOf(postNow);
+      posts['toCome'].splice(indexNow, 1);
+      posts['already'].push(postNow);
       var status = postNow['phrase'] + "\n - " + postNow['nameSong'] +
         " (" + postNow['albumName'] + ", " + postNow['albumYear'] + ")";
       Bot.post('statuses/update', {
